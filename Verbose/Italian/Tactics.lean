@@ -1,0 +1,9 @@
+import Verbose.Italian.Assume
+import Verbose.Italian.By
+import Verbose.Italian.Since
+import Verbose.Italian.Claim
+import Verbose.Italian.Fix
+import Verbose.Italian.Lets
+import Verbose.Italian.Set
+import Verbose.Italian.We
+import Verbose.Italian.Calc

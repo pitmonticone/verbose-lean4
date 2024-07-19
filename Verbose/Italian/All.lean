@@ -1,0 +1,11 @@
+import Verbose.Tactics.Notations
+import Verbose.Italian.Assume
+import Verbose.Italian.By
+import Verbose.Italian.Calc
+import Verbose.Italian.Claim
+import Verbose.Italian.Fix
+import Verbose.Italian.Lets
+import Verbose.Italian.Since
+import Verbose.Italian.We
+import Verbose.Italian.Widget
+import Verbose.Italian.Statements
