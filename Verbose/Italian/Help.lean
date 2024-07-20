@@ -91,17 +91,17 @@ implement_endpoint (lang := en) helpImplicationSuggestion (hyp HN H'N : Name) (c
 
 implement_endpoint (lang := en) helpEquivalenceSuggestion (hyp hyp'N : Name) (l r : Expr) : SuggestionM Unit := do
   pushCom "L'assunzione {hyp} è un'equivalenza"
-  pushCom "Si può usarlo per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
+  pushCom "Si può usare per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
   pushTac `(tactic|Noi riscriviamo usando $hyp.ident:term)
   flush
-  pushCom "Si può usare per rimpiazzare il lato destro nell'obiettivo con:"
+  pushCom "Si può usare per sostituire il lato destro nell'obiettivo con:"
   pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident)
   flush
-  pushCom "One can also perform such replacements in an assumption {hyp'N} with"
-  pushTac `(tactic|Noi riscriviamo usando $hyp.ident:term at $hyp'N.ident:ident)
+  pushCom "Si possono anche eseguire tali sostituzioni nell'ipotesi {hyp'N} con"
+  pushTac `(tactic|Noi riscriviamo usando $hyp.ident:term dentro $hyp'N.ident:ident)
   flush
   pushCom "or"
-  pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:term at $hyp'N.ident:ident)
+  pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:term dentro $hyp'N.ident:ident)
 
 implement_endpoint (lang := en) helpEqualSuggestion (hyp hyp' : Name) (closes : Bool) (l r : Expr) :
     SuggestionM Unit := do
@@ -111,17 +111,17 @@ implement_endpoint (lang := en) helpEqualSuggestion (hyp hyp' : Name) (closes : 
     pushComment   "Si può utilizzare con:"
     pushTac `(tactic|Noi concludiamo per $hyp.ident:ident)
   else do
-    pushCom "Si può usarlo per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
+    pushCom "Si può usare per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
     pushTac `(tactic|Noi riscriviamo usando $hyp.ident:ident)
     flush
-    pushCom "Si può usare per rimpiazzare il lato destro nell'obiettivo con:"
+    pushCom "Si può usare per sostituire il lato destro nell'obiettivo con:"
     pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident)
     flush
     pushCom "One can also perform such replacements in an assumption {hyp'} with"
-    pushTac `(tactic|Noi riscriviamo usando $hyp.ident:ident at $hyp'.ident:ident)
+    pushTac `(tactic|Noi riscriviamo usando $hyp.ident:ident dentro $hyp'.ident:ident)
     flush
     pushCom "or"
-    pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident at $hyp'.ident:ident)
+    pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident dentro $hyp'.ident:ident)
     flush
     pushCom "One can also use it in a computation step, or combine it linearly to others with:"
     pushTac `(tactic|Noi combiniamo [$hyp.ident:term, ?_])
@@ -171,7 +171,7 @@ implement_endpoint (lang := en) helpSubsetSuggestion (hyp x hx hx' : Name)
   pushComment <| libre hx'.ident
 
 implement_endpoint (lang := en) assumptionClosesSuggestion (hypId : Ident) : SuggestionM Unit := do
-  pushCom "This assumption is exactly what needs to be proven"
+  pushCom "Questa assunzione è esattamente ciò che deve essere dimostrato"
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Noi concludiamo per $hypId:ident)
 
@@ -428,7 +428,7 @@ set_option linter.unusedTactic false
 
 /--
 info: Aiuto
-• Per h applicato ad n₀ usando hn₀ otteniamo (hyp : P n₀)
+• Per h applicato a n₀ usando hn₀ otteniamo (hyp : P n₀)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∀ n > 0, P n) : P 2 := by
@@ -457,7 +457,7 @@ example {P : ℝ → Prop} (h : ∃ ε > 0, P ε) : True := by
 /--
 info: Aiuto
 • Per h applicato a n₀ otteniamo (hn₀ : P n₀ ⇒ Q n₀)
-• Noi applichiamo h ad n₀
+• Noi applichiamo h a n₀
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
@@ -507,8 +507,8 @@ example (P Q : ℕ → Prop) (h : P 1 ∧ Q 2) : True := by
 info: Aiuto
 • Noi riscriviamo usando h
 • Noi riscriviamo usando ← h
-• Noi riscriviamo usando h at hyp
-• Noi riscriviamo usando ← h at hyp
+• Noi riscriviamo usando h dentro hyp
+• Noi riscriviamo usando ← h dentro hyp
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : (∀ n ≥ 2, P n) ↔  ∀ l, Q l) : True := by
