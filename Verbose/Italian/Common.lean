@@ -158,7 +158,7 @@ implement_endpoint (lang := en) nameAlreadyUsed (n : Name) : CoreM String :=
 pure s!"Il nome {n} è già utilizzato."
 
 implement_endpoint (lang := en) notDefEq (expr val : MessageData) : CoreM MessageData :=
-pure m!"Il termine fornito{expr}\non è uguale per definizione al termine atteso{val}."
+pure m!"Il termine fornito{expr}\nnon è uguale per definizione a quello atteso{val}"
 
 implement_endpoint (lang := en) notAppConst : CoreM String :=
 pure "Non è l'applicazione di una definizione."

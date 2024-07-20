@@ -4,71 +4,70 @@ import Verbose.Italian.Common
 open Lean Elab Parser Tactic Verbose.Italian
 
 declare_syntax_cat becomes
-syntax colGt " which becomes " term : becomes
+syntax colGt " che diventa " term : becomes
 
-def extractBecomes (e : Lean.TSyntax `becomes) : Lean.Term := ⟨e.raw[1]!⟩
+def extractBecomes (expr : Lean.TSyntax `becomes) : Lean.Term := ⟨expr.raw[1]!⟩
 
-elab rw:"We" " rewrite using " s:myRwRuleSeq l:(location)? new:(becomes)? : tactic => do
+elab rw:"Noi" " riscriviamo usando " s:myRwRuleSeq l:(location)? new:(becomes)? : tactic => do
   rewriteTac rw s (l.map expandLocation) (new.map extractBecomes)
 
-elab rw:"We" " rewrite using " s:myRwRuleSeq " everywhere" : tactic => do
+elab rw:"Noi" " riscriviamo usando " s:myRwRuleSeq " ovunque" : tactic => do
   rewriteTac rw s (some Location.wildcard) none
 
-elab "We" " proceed using " exp:term : tactic =>
+elab "Noi" " procediamo usando " exp:term : tactic =>
   discussOr exp
 
-elab "We" " proceed depending on " exp:term : tactic =>
+elab "Noi" " procediamo dipendendo da " exp:term : tactic =>
   discussEm exp
 
-elab "We" " conclude by " e:maybeApplied : tactic => do
-  concludeTac (← maybeAppliedToTerm e)
+elab "Noi" " concludiamo per " expr:maybeApplied : tactic => do
+  concludeTac (← maybeAppliedToTerm expr)
 
-elab "We" " combine [" prfs:term,* "]" : tactic => do
+elab "Noi" " combiniamo [" prfs:term,* "]" : tactic => do
   combineTac prfs.getElems
 
-elab "We" " compute" loc:(location)? : tactic => do
+elab "Noi" " calcoliamo" loc:(location)? : tactic => do
   computeTac loc
 
-elab "We" " apply " exp:term : tactic => do
+elab "Noi" " applichiamo " exp:term : tactic => do
   evalApply (← `(tactic|apply $exp))
 
-elab "We" " apply " exp:term " at " h:ident: tactic => do
+elab "Noi" " applichiamo " exp:term " ad " h:ident: tactic => do
   let loc ← ident_to_location h
   evalTactic (← `(tactic|apply_fun $exp $loc:location))
 
-elab "We" " apply " exp:term " to " e:term : tactic => do
-  evalTactic (← `(tactic|specialize $exp $e))
+elab "Noi" " applichiamo " exp:term " al termine " expr:term : tactic => do
+  evalTactic (← `(tactic|specialize $exp $expr))
 
-macro "We" " forget " args:(ppSpace colGt term:max)+ : tactic => `(tactic|clear $args*)
+macro "Noi" " dimentichiamo " args:(ppSpace colGt term:max)+ : tactic => `(tactic|clear $args*)
 
-macro "We" " reformulate " h:ident " as " new:term : tactic => `(tactic|change $new at $h:ident)
+macro "Noi" " riformuliamo " h:ident " come " new:term : tactic => `(tactic|change $new at $h:ident)
 
-elab "We" " contrapose" : tactic => contraposeTac true
+elab "Noi" " contrapponiamo" : tactic => contraposeTac true
 
-elab "We" " contrapose" " simply": tactic => contraposeTac false
+elab "Noi" " contrapponiamo" " semplicemente": tactic => contraposeTac false
 
-elab "We " " push the negation " l:(location)? new:(becomes)? : tactic => do
+elab "Noi " " svolgiamo la negazione " l:(location)? new:(becomes)? : tactic => do
   pushNegTac (l.map expandLocation) (new.map extractBecomes)
 
 implement_endpoint (lang := en) rwResultWithoutGoal : CoreM String :=
-pure "Specifying the rewriting result is possible only when something remains to be proven."
+pure "Specificare il risultato della riscrittura è possibile solo quando rimane qualcosa da provare."
 
 implement_endpoint (lang := en) rwResultSeveralLoc : CoreM String :=
-pure "Specifying the rewriting result is possible only when rewriting in a single location."
+pure "Specificare il risultato della riscrittura è possibile solo quando si riscrive in una singola posizione."
 
 implement_endpoint (lang := en) cannotContrapose : CoreM String :=
-pure "Cannot contrapose: the main goal is not an implication."
+pure "Non si può contrappore: l'obiettivo principale non è un'implicazione."
 
 example (P Q : Prop) (h : P ∨ Q) : True := by
-  We proceed using h
+  Noi procediamo usando h
   . intro _hP
     trivial
   . intro _hQ
     trivial
 
-
 example (P : Prop) : True := by
-  We proceed depending on P
+  Noi procediamo dipendendo da P
   . intro _hP
     trivial
   . intro _hnP
@@ -84,164 +83,164 @@ has type
   Q : Prop
 but is expected to have type
   R : Prop"
-    We conclude by hRP applied to hQ
-  We conclude by hRP applied to hR
+    Noi concludiamo per hRP applicato a hQ
+  Noi concludiamo per hRP applicato a hR
 
 example (P : ℕ → Prop) (h : ∀ n, P n) : P 0 := by
-  We conclude by h applied to _
+  Noi concludiamo per h applicato a _
 
 example (P : ℕ → Prop) (h : ∀ n, P n) : P 0 := by
-  We conclude by h
+  Noi concludiamo per h
 
 example {a b : ℕ}: a + b = b + a := by
-  We compute
+  Noi calcoliamo
 
 example {a b : ℕ} (h : a + b - a = 0) : b = 0 := by
-  We compute at h
-  We conclude by h
+  Noi calcoliamo at h
+  Noi concludiamo per h
 
 variable (k : Nat)
 
 example (h : True) : True := by
-  We conclude by h
+  Noi concludiamo per h
 
 example (h : ∀ _n : ℕ, True) : True := by
-  We conclude by h applied to 0
+  Noi concludiamo per h applicato a 0
 
 example (h : True → True) : True := by
-  We apply h
+  Noi applichiamo h
   trivial
 
 example (h : ∀ _n _k : ℕ, True) : True := by
-  We conclude by h applied to 0 and 1
+  Noi concludiamo per h applicato a 0 e 1
 
 example (a b : ℕ) (h : a < b) : a ≤ b := by
-  We conclude by h
+  Noi concludiamo per h
 
 example (a b c : ℕ) (h : a < b ∧ a < c) : a ≤ b := by
-  We conclude by h
+  Noi concludiamo per h
 
 example (a b c : ℕ) (h : a ≤ b) (h' : b ≤ c) : a ≤ c := by
-  We combine [h, h']
+  Noi combiniamo [h, h']
 
 example (a b c : ℤ) (h : a = b + c) (h' : b - a = c) : c = 0 := by
-  We combine [h, h']
+  Noi combiniamo [h, h']
 
 example (a b c : ℕ) (h : a ≤ b) (h' : b ≤ c ∧ a+b ≤ a+c) : a ≤ c := by
-  We combine [h, h']
+  Noi combiniamo [h, h']
 
 example (a b c : ℕ) (h : a = b) (h' : a = c) : b = c := by
-  We rewrite using ← h
-  We conclude by h'
+  Noi riscriviamo usando ← h
+  Noi concludiamo per h'
 
 example (a b c : ℕ) (h : a = b) (h' : a = c) : b = c := by
-  We rewrite using h at h'
-  We conclude by h'
+  Noi riscriviamo usando h at h'
+  Noi concludiamo per h'
 
 example (a b : Nat) (h : a = b) (h' : b = 0): a = 0 := by
-  We rewrite using ← h at h' which becomes a = 0
+  Noi riscriviamo usando ← h at h' che diventa a = 0
   exact h'
 
 example (a b : Nat) (h : a = b) (h' : b = 0): a = 0 := by
-  We rewrite using ← h at h'
+  Noi riscriviamo usando ← h at h'
   clear h
   exact h'
 
 example (f : ℕ → ℕ) (n : ℕ) (h : n > 0 → f n = 0) (hn : n > 0): f n = 0 := by
-  We rewrite using h
+  Noi riscriviamo usando h
   exact hn
 
 example (f : ℕ → ℕ) (h : ∀ n > 0, f n = 0) : f 1 = 0 := by
-  We rewrite using h
+  Noi riscriviamo usando h
   norm_num
 
 example (a b c : ℕ) (h : a = b) (h' : a = c) : b = c := by
-  success_if_fail_with_msg "Given term
+  success_if_fail_with_msg "Il termine fornito
   a = c
-is not definitionally equal to the expected
+non è uguale per definizione a quello atteso
   b = c"
-    We rewrite using [h] at h' which becomes a = c
-  We rewrite using [h] at h' which becomes b = c
-  We conclude by h'
+    Noi riscriviamo usando [h] at h' che diventa a = c
+  Noi riscriviamo usando [h] at h' che diventa b = c
+  Noi concludiamo per h'
 
 example (a b c : ℕ) (h : a = b) (h' : a = c) : a = c := by
-  We rewrite using h everywhere
-  We conclude by h'
+  Noi riscriviamo usando h ovunque
+  Noi concludiamo per h'
 
 example (P Q : Prop) (h : P → Q) (h' : P) : Q := by
-  We apply h to h'
-  We conclude by h
+  Noi applichiamo h al termine h'
+  Noi concludiamo per h
 
 example (P Q R : Prop) (h : P → Q → R) (hP : P) (hQ : Q) : R := by
-  We conclude by h applied to hP and hQ
+  Noi concludiamo per h applicato a hP e hQ
 
 example (f : ℕ → ℕ) (a b : ℕ) (h : a = b) : f a = f b := by
-  We apply f at h
-  We conclude by h
+  Noi applichiamo f ad h
+  Noi concludiamo per h
 
 example (P : ℕ → Prop) (h : ∀ n, P n) : P 0 := by
-  We apply h to 0
-  We conclude by h
+  Noi applichiamo h al termine 0
+  Noi concludiamo per h
 
 
 example (x : ℝ) : (∀ ε > 0, x ≤ ε) → x ≤ 0 := by
-  We contrapose
+  Noi contrapponiamo
   intro h
   use x/2
   constructor
-  We conclude by h
-  We conclude by h
+  Noi concludiamo per h
+  Noi concludiamo per h
 
-example (ε : ℝ) (h : ε > 0) : ε ≥ 0 := by We conclude by h
-example (ε : ℝ) (h : ε > 0) : ε/2 > 0 := by We conclude by h
-example (ε : ℝ) (h : ε > 0) : ε ≥ -1 := by We conclude by h
-example (ε : ℝ) (h : ε > 0) : ε/2 ≥ -3 := by We conclude by h
+example (ε : ℝ) (h : ε > 0) : ε ≥ 0 := by Noi concludiamo per h
+example (ε : ℝ) (h : ε > 0) : ε/2 > 0 := by Noi concludiamo per h
+example (ε : ℝ) (h : ε > 0) : ε ≥ -1 := by Noi concludiamo per h
+example (ε : ℝ) (h : ε > 0) : ε/2 ≥ -3 := by Noi concludiamo per h
 
-example (x : ℝ) (h : x = 3) : 2*x = 6 := by We conclude by h
+example (x : ℝ) (h : x = 3) : 2*x = 6 := by Noi concludiamo per h
 
 example (x : ℝ) : (∀ ε > 0, x ≤ ε) → x ≤ 0 := by
-  We contrapose simply
+  Noi contrapponiamo semplicemente
   intro h
-  We push the negation
-  We push the negation at h
+  Noi svolgiamo la negazione
+  Noi svolgiamo la negazione at h
   use x/2
   constructor
-  · We conclude by h
-  · We conclude by h
+  · Noi concludiamo per h
+  · Noi concludiamo per h
 
 example (x : ℝ) : (∀ ε > 0, x ≤ ε) → x ≤ 0 := by
-  We contrapose simply
+  Noi contrapponiamo semplicemente
   intro h
-  success_if_fail_with_msg "Given term
+  success_if_fail_with_msg "Il termine fornito
   0 < x
-is not definitionally equal to the expected
+non è uguale per definizione a quello atteso
   ∃ ε > 0, ε < x"
-    We push the negation which becomes 0 < x
-  We push the negation which becomes ∃ ε > 0, ε < x
-  success_if_fail_with_msg "Given term
+    Noi svolgiamo la negazione che diventa 0 < x
+  Noi svolgiamo la negazione che diventa ∃ ε > 0, ε < x
+  success_if_fail_with_msg "Il termine fornito
   ∃ ε > 0, ε < x
-is not definitionally equal to the expected
+non è uguale per definizione a quello atteso
   0 < x"
-    We push the negation at h which becomes ∃ ε > 0, ε < x
-  We push the negation at h which becomes 0 < x
+    Noi svolgiamo la negazione at h che diventa ∃ ε > 0, ε < x
+  Noi svolgiamo la negazione at h che diventa 0 < x
   use x/2
   constructor
-  · We conclude by h
-  · We conclude by h
+  · Noi concludiamo per h
+  · Noi concludiamo per h
 
 set_option linter.unusedVariables false in
 example : (∀ n : ℕ, False) → 0 = 1 := by
-  We contrapose
-  We compute
+  Noi contrapponiamo
+  Noi calcoliamo
 
 example (P Q : Prop) (h : P ∨ Q) : True := by
-  We proceed using h
+  Noi procediamo usando h
   all_goals
     intro
     trivial
 
 example (P : Prop) (hP₁ : P → True) (hP₂ : ¬ P → True): True := by
-  We proceed depending on P
+  Noi procediamo dipendendo da P
   intro h
   exact hP₁ h
   intro h
@@ -253,43 +252,43 @@ namespace Verbose.Italian
 def f (n : ℕ) := 2*n
 
 example : f 2 = 4 := by
-  We unfold f
+  Noi unfold f
   refl
 
 example (h : f 2 = 4) : True → True := by
-  We unfold f at h
+  Noi unfold f at h
   guard_hyp_strict h : 2*2 = 4
   exact id
 
 example (h : f 2 = 4) : True → True := by
   success_if_fail_with_msg ""
-    We unfold f at h which becomes 2*2 = 5
-  We unfold f at h which becomes 2*2 = 4
+    Noi unfold f at h che diventa 2*2 = 5
+  Noi unfold f at h che diventa 2*2 = 4
   exact id
 
 example (P : ℕ → ℕ → Prop) (h : ∀ n : ℕ, ∃ k, P n k) : True := by
-  We rename n to p at h
-  We rename k to l at h
+  Noi rename n to p at h
+  Noi rename k to l at h
   guard_hyp_strict h : ∀ p, ∃ l, P p l
   trivial
 
 example (P : ℕ → ℕ → Prop) (h : ∀ n : ℕ, ∃ k, P n k) : True := by
-  We rename n to p at h which becomes ∀ p, ∃ k, P p k
+  Noi rename n to p at h che diventa ∀ p, ∃ k, P p k
   success_if_fail_with_msg ""
-    We rename k to l at h which becomes ∀ p, ∃ j, P p j
-  We rename k to l at h which becomes ∀ p, ∃ l, P p l
+    Noi rename k to l at h che diventa ∀ p, ∃ j, P p j
+  Noi rename k to l at h che diventa ∀ p, ∃ l, P p l
   trivial
 
 example (P : ℕ → ℕ → Prop) : (∀ n : ℕ, ∃ k, P n k) ∨ True := by
-  We rename n to p
-  We rename k to l
+  Noi rename n to p
+  Noi rename k to l
   guard_target_strict (∀ p, ∃ l, P p l) ∨ True
   right
   trivial
  -/
 example (a b c : ℕ) : True := by
-  We forget a
-  We forget b c
+  Noi dimentichiamo a
+  Noi dimentichiamo b c
   trivial
 
 example (h : 1 + 1 = 2) : True := by
@@ -299,6 +298,6 @@ has type
   2 = 3 : Prop
 but is expected to have type
   1 + 1 = 2 : Prop"
-    We reformulate h as 2 = 3
-  We reformulate h as 2 = 2
+    Noi riformuliamo h come 2 = 3
+  Noi riformuliamo h come 2 = 2
   trivial
