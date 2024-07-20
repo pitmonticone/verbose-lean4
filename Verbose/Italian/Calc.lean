@@ -1,7 +1,6 @@
 import Verbose.Tactics.Calc
 import Verbose.Italian.Common
 
-
 namespace Lean.Elab.Tactic
 open Meta Verbose Italian
 
@@ -29,7 +28,6 @@ def convertFirstCalcStep (step : TSyntax `CalcFirstStep) : TermElabM (TSyntax ``
   | `(CalcFirstStep|$t:term by $prf:tacticSeq) => `(calcFirstStep|$t := by $prf)
   | _ => throwUnsupportedSyntax
 
-
 def convertCalcStep (step : TSyntax `CalcStep) : TermElabM (TSyntax ``calcStep) := do
   match step with
   | `(CalcStep|$t:term from $prf:maybeApplied) => do let prfT ← maybeAppliedToTerm prf; `(calcStep|$t := by fromCalcTac $prfT)
@@ -46,7 +44,6 @@ def convertCalcSteps (steps : TSyntax ``CalcSteps) : TermElabM (TSyntax ``calcSt
          `(calcSteps|$first
            $steps*)
   | _ => throwUnsupportedSyntax
-
 
 elab_rules : tactic
 | `(tactic|Calc%$calcstx $stx) => do
