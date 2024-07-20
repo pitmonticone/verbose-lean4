@@ -80,12 +80,12 @@ implement_endpoint (lang := en) helpImplicationSuggestion (hyp HN H'N : Name) (c
     pushCom "Quindi è possibile utilizzare questa ipotesi con:"
     pushTac `(tactic|Per $hyp.ident:term è sufficiente dimostrare $(← le.stx))
     flush
-    pushCom "If one already has a proof {HN} of {← le.fmt} then one can use:"
+    pushCom "Se si ha già una dimostrazione {HN} di {← le.fmt} allora si può usare:"
     pushTac `(tactic|Noi concludiamo per $hyp.ident:term applicato a $HN.ident)
   else do
-    pushCom "The premise of this implication is {← le.fmt}"
-    pushCom "If you have a proof {HN} of {← le.fmt}"
-    pushCom "you can use this assumption with:"
+    pushCom "La premessa di questa implicazione è {← le.fmt}"
+    pushCom "Se hai una dimostrazione {HN} di {← le.fmt}"
+    pushCom "puoi usare questa ipotesi con:"
     pushTac `(tactic|Per $hyp.ident:term applicato a $HN.ident:term otteniamo $H'N.ident:ident : $(← re.stx):term)
     pushComment <| libre H'N.ident
 
@@ -94,7 +94,7 @@ implement_endpoint (lang := en) helpEquivalenceSuggestion (hyp hyp'N : Name) (l 
   pushCom "Si può usarlo per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
   pushTac `(tactic|Noi riscriviamo usando $hyp.ident:term)
   flush
-  pushCom "One can use it to replace the right-hand-side in the goal with:"
+  pushCom "Si può usare per rimpiazzare il lato destro nell'obiettivo con:"
   pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident)
   flush
   pushCom "One can also perform such replacements in an assumption {hyp'N} with"
@@ -114,7 +114,7 @@ implement_endpoint (lang := en) helpEqualSuggestion (hyp hyp' : Name) (closes : 
     pushCom "Si può usarlo per sostituire il lato sinistro (ovvero {← l.fmt}) con il lato destro (ovvero {← r.fmt}) nell'obiettivo con:"
     pushTac `(tactic|Noi riscriviamo usando $hyp.ident:ident)
     flush
-    pushCom "One can use it to replace the right-hand-side in the goal with:"
+    pushCom "Si può usare per rimpiazzare il lato destro nell'obiettivo con:"
     pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident)
     flush
     pushCom "One can also perform such replacements in an assumption {hyp'} with"
@@ -241,7 +241,7 @@ implement_endpoint (lang := en) helpForAllSimpleGenericSuggestion (hyp nn₀ hn�
   pushComment <| libre hn₀.ident
   flush
   pushCom "If this assumption won't be used again in its general shape, one can also specialize {hyp} with"
-  pushTac `(tactic|Noi applichiamo $hyp.ident:ident a $nn₀.ident)
+  pushTac `(tactic|Noi applichiamo $hyp.ident:ident ad $nn₀.ident)
 
 implement_endpoint (lang := en) helpForAllSimpleGenericApplySuggestion (prf : Expr) (but : Format) :
     SuggestionM Unit := do
@@ -264,11 +264,11 @@ implement_endpoint (lang := en) helpDataSuggestion (hyp : Name) (t : Format) : S
     | s => s!" : {s} is fixed."
 
 implement_endpoint (lang := en) helpNothingSuggestion : SuggestionM Unit := do
-  pushCom "I have nothing to say about this assumption."
+  pushCom "Non ho nulla da dire su questa ipotesi."
   flush
 
 implement_endpoint (lang := en) helpNothingGoalSuggestion : SuggestionM Unit := do
-  pushCom "I have nothing to say about this goal."
+  pushCom "Non ho nulla da dire su questo obiettivo."
   flush
 
 def descrGoalHead (headDescr : String) : SuggestionM Unit :=
@@ -428,7 +428,7 @@ set_option linter.unusedTactic false
 
 /--
 info: Aiuto
-• By h applicato a n₀ using hn₀ otteniamo (hyp : P n₀)
+• Per h applicato ad n₀ usando hn₀ otteniamo (hyp : P n₀)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∀ n > 0, P n) : P 2 := by
@@ -438,7 +438,7 @@ example {P : ℕ → Prop} (h : ∀ n > 0, P n) : P 2 := by
 
 /--
 info: Aiuto
-• By h otteniamo n tale che (n_pos : n > 0) e (hn : P n)
+• Per h otteniamo n tale che (n_pos : n > 0) e (hn : P n)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∃ n > 0, P n) : True := by
@@ -447,7 +447,7 @@ example {P : ℕ → Prop} (h : ∃ n > 0, P n) : True := by
 
 /--
 info: Aiuto
-• By h otteniamo ε tale che (ε_pos : ε > 0) e (hε : P ε)
+• Per h otteniamo ε tale che (ε_pos : ε > 0) e (hε : P ε)
 -/
 #guard_msgs in
 example {P : ℝ → Prop} (h : ∃ ε > 0, P ε) : True := by
@@ -456,8 +456,8 @@ example {P : ℝ → Prop} (h : ∃ ε > 0, P ε) : True := by
 
 /--
 info: Aiuto
-• By h applicato a n₀ otteniamo (hn₀ : P n₀ ⇒ Q n₀)
-• Noi applichiamo h to n₀
+• Per h applicato a n₀ otteniamo (hn₀ : P n₀ ⇒ Q n₀)
+• Noi applichiamo h ad n₀
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
@@ -466,7 +466,7 @@ example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
 
 /--
 info: Aiuto
-• By h applicato a n₀ otteniamo (hn₀ : P n₀)
+• Per h applicato a n₀ otteniamo (hn₀ : P n₀)
 • Noi applichiamo h to n₀
 • Noi concludiamo per h applicato a 2
 -/
@@ -477,7 +477,7 @@ example (P : ℕ → Prop) (h : ∀ n, P n) : P 2 := by
 
 /--
 info: Aiuto
-• By h è sufficiente dimostrare P 1
+• Per h è sufficiente dimostrare P 1
 • Noi concludiamo per h applicato a H
 -/
 #guard_msgs in
@@ -487,7 +487,7 @@ example (P Q : ℕ → Prop) (h : P 1 → Q 2) (h' : P 1) : Q 2 := by
 
 /--
 info: Aiuto
-• By h applicato a H otteniamo H' : Q 2
+• Per h applicato a H otteniamo H' : Q 2
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 → Q 2) : True := by
@@ -496,7 +496,7 @@ example (P Q : ℕ → Prop) (h : P 1 → Q 2) : True := by
 
 /--
 info: Aiuto
-• By h otteniamo (h_1 : P 1) (h' : Q 2)
+• Per h otteniamo (h_1 : P 1) (h' : Q 2)
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 ∧ Q 2) : True := by
@@ -545,7 +545,7 @@ example : True ∨ False := by
   left
   trivial
 
-/-- info: I have nothing to say about this assumption. -/
+/-- info: Non ho nulla da dire su questa ipotesi. -/
 #guard_msgs in
 example (P : Prop) (h : P) : True := by
   aiuto h
@@ -564,7 +564,7 @@ example (h : False) : 0 = 1 := by
 
 /--
 info: Aiuto
-• By h applicato a H otteniamo H' : P l k
+• Per h applicato a H otteniamo H' : P l k
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (k l n : ℕ) (h : l - n = 0 → P l k) : True := by
@@ -573,7 +573,7 @@ example (P : ℕ → ℕ → Prop) (k l n : ℕ) (h : l - n = 0 → P l k) : Tru
 
 /--
 info: Aiuto
-• By h applicato a k₀ using hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
+• Per h applicato a k₀ usando hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -582,7 +582,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n =
 
 /--
 info: Aiuto
-• By h applicato a k₀ e n₀ using H otteniamo (h_1 : ∀ (l : ℕ), l - n₀ = 0 ⇒ P l k₀)
+• Per h applicato a k₀ e n₀ usando H otteniamo (h_1 : ∀ (l : ℕ), l - n₀ = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k, ∀ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -591,7 +591,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k, ∀ n ≥ 3, ∀ l, l - n = 0 →
 
 /--
 info: Aiuto
-• By h applicato a k₀ using hk₀ otteniamo n_1 tale che (n_1_sup : n_1 ≥ 3) e (hn_1 : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
+• Per h applicato a k₀ usando hk₀ otteniamo n_1 tale che (n_1_sup : n_1 ≥ 3) e (hn_1 : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (n : ℕ) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -600,7 +600,7 @@ example (P : ℕ → ℕ → Prop) (n : ℕ) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ 
 
 /--
 info: Aiuto
-• By h otteniamo n tale che (n_sup : n ≥ 5) e (hn : P n)
+• Per h otteniamo n tale che (n_sup : n ≥ 5) e (hn : P n)
 -/
 #guard_msgs in
 example (P : ℕ → Prop) (h : ∃ n ≥ 5, P n) : True := by
@@ -609,7 +609,7 @@ example (P : ℕ → Prop) (h : ∃ n ≥ 5, P n) : True := by
 
 /--
 info: Aiuto
-• By h applicato a k₀ using hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : P n k₀)
+• Per h applicato a k₀ usando hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, P n k) : True := by
@@ -618,7 +618,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, P n k) : True 
 
 /--
 info: Aiuto
-• By h otteniamo n tale che (hn : P n)
+• Per h otteniamo n tale che (hn : P n)
 -/
 #guard_msgs in
 example (P : ℕ → Prop) (h : ∃ n : ℕ, P n) : True := by
@@ -627,7 +627,7 @@ example (P : ℕ → Prop) (h : ∃ n : ℕ, P n) : True := by
 
 /--
 info: Aiuto
-• By h applicato a k₀ otteniamo n tale che (hn : P n k₀)
+• Per h applicato a k₀ otteniamo n tale che (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k, ∃ n : ℕ, P n k) : True := by
@@ -636,7 +636,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k, ∃ n : ℕ, P n k) : True := by
 
 /--
 info: Aiuto
-• By h applicato a k₀ using hk₀ otteniamo n tale che (hn : P n k₀)
+• Per h applicato a k₀ usando hk₀ otteniamo n tale che (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n : ℕ, P n k) : True := by
@@ -700,7 +700,7 @@ example : ∃ n ≥ 1, True := by
   aiuto
   use 1
 
-/-- info: I have nothing to say about this assumption. -/
+/-- info: Non ho nulla da dire su questa ipotesi. -/
 #guard_msgs in
 example (h : Odd 3) : True := by
   aiuto h
@@ -711,7 +711,7 @@ info: Aiuto
 • Sia x ∈ s
 ---
 info: Aiuto
-• By h applicato a x_1 using hx otteniamo hx' : x_1 ∈ t
+• Per h applicato a x_1 usando hx otteniamo hx' : x_1 ∈ t
 -/
 #guard_msgs in
 example (s t : Set ℕ) (h : s ⊆ t) : s ⊆ t := by
@@ -722,17 +722,17 @@ example (s t : Set ℕ) (h : s ⊆ t) : s ⊆ t := by
 
 /--
 info: Aiuto
-• By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
+• Per h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
 -/
 #guard_msgs in
 example (s t : Set ℕ) (x : ℕ) (h : x ∈ s ∩ t) : x ∈ s := by
   aiuto h
-  By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
+  Per h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
   exact h_1
 
 /--
 info: Aiuto
-• By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
+• Per h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
 ---
 info: Aiuto
 • Dimostriamo prima che x ∈ t
@@ -743,7 +743,7 @@ info: Aiuto
 #guard_msgs in
 example (s t : Set ℕ) (x : ℕ) (h : x ∈ s ∩ t) : x ∈ t ∩ s := by
   aiuto h
-  By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
+  Per h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
   aiuto
   Dimostriamo prima che x ∈ t
   exact h'
@@ -780,7 +780,7 @@ example : False → True := by
   aiuto
   simp
 
-/-- info: I have nothing to say about this goal. -/
+/-- info: Non ho nulla da dire su questo obiettivo. -/
 #guard_msgs in
 example : True := by
   aiuto
@@ -799,7 +799,7 @@ example : False → True := by
   Noi contrapponiamo
   simp
 
-/-- info: I have nothing to say about this goal. -/
+/-- info: Non ho nulla da dire su questo obiettivo. -/
 #guard_msgs in
 example : True := by
   aiuto
@@ -818,7 +818,7 @@ example : True := by
 
 /--
 info: Aiuto
-• By h otteniamo x_1 tale che (hx_1 : f x_1 = y)
+• Per h otteniamo x_1 tale che (hx_1 : f x_1 = y)
 -/
 #guard_msgs in
 example {X Y} (f : X → Y) (x : X) (y : Y) (h : ∃ x, f x = y) : True := by
@@ -827,7 +827,7 @@ example {X Y} (f : X → Y) (x : X) (y : Y) (h : ∃ x, f x = y) : True := by
 
 /--
 info: Aiuto
-• By h otteniamo x_1 tale che (x_1_dans : x_1 ∈ s) e (hx_1 : f x_1 = y)
+• Per h otteniamo x_1 tale che (x_1_dans : x_1 ∈ s) e (hx_1 : f x_1 = y)
 -/
 #guard_msgs in
 example {X Y} (f : X → Y) (s : Set X) (x : X) (y : Y) (h : ∃ x ∈ s, f x = y) : True := by
