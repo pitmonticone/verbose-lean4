@@ -7,34 +7,34 @@ open Lean Meta Server
 open ProofWidgets
 
 implement_endpoint (lang := en) mkReformulateHypTacStx (hyp : Ident) (new : Term) : MetaM (TSyntax `tactic) :=
-`(tactic|We reformulate $hyp as $new)
+`(tactic|Noi riformuliamo $hyp come $new)
 
 implement_endpoint (lang := en) mkShowTacStx (new : Term) : MetaM (TSyntax `tactic) :=
-`(tactic|Let's prove that $new)
+`(tactic|Dimostriamo che $new)
 
 implement_endpoint (lang := en) mkConcludeTacStx (args : List Term) : MetaM (TSyntax `tactic) := do
 let concl ← listTermToMaybeApplied args
-`(tactic|We conclude by $concl)
+`(tactic|Noi concludiamo per $concl)
 
 implement_endpoint (lang := en) mkObtainTacStx (args : List Term) (news : List MaybeTypedIdent) :
   MetaM (TSyntax `tactic) := do
 let maybeApp ← listTermToMaybeApplied args
 let newStuff ← listMaybeTypedIdentToNewStuffSuchThatEN news
-`(tactic|By $maybeApp we get $newStuff)
+`(tactic|Per $maybeApp otteniamo $newStuff)
 
 implement_endpoint (lang := en) mkUseTacStx (wit : Term) : Option Term → MetaM (TSyntax `tactic)
-| some goal => `(tactic|Let's prove that $wit funziona : $goal)
-| none => `(tactic|Let's prove that $wit funziona)
+| some goal => `(tactic|Dimostriamo che $wit funziona : $goal)
+| none => `(tactic|Dimostriamo che $wit funziona)
 
 implement_endpoint (lang := en) mkSinceTacStx (facts : Array Term) (concl : Term) :
     MetaM (TSyntax `tactic) := do
   let factsS ← arrayToFacts facts
-  `(tactic|Since $factsS we conclude that $concl)
+  `(tactic|Siccome $factsS concludiamo che $concl)
 
 @[server_rpc_method]
 def suggestionsPanel.rpc := mkPanelRPC makeSuggestions
-  "Use shift-click to select sub-expressions."
-  "Suggestions"
+  "Usa shift-click per selezionare sotto-espressioni."
+  "Suggerimenti"
 
 @[widget_module]
 def suggestionsPanel : Component SuggestionsParams :=
