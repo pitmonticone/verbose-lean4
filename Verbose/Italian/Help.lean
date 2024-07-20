@@ -68,7 +68,7 @@ implement_endpoint (lang := en) helpConjunctionSuggestion (hyp : Name) (h₁I h�
   pushComment <| libres [h₁I, h₂I]
 
 implement_endpoint (lang := en) helpDisjunctionSuggestion (hyp : Name) : SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} è della forma « ... or ... »"
+  pushCom "L'assunzione {hyp} è della forma « ... o ... »"
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Noi procediamo usando $hyp.ident:term)
 
@@ -100,14 +100,14 @@ implement_endpoint (lang := en) helpEquivalenceSuggestion (hyp hyp'N : Name) (l 
   pushCom "Si possono anche eseguire tali sostituzioni nell'ipotesi {hyp'N} con"
   pushTac `(tactic|Noi riscriviamo usando $hyp.ident:term dentro $hyp'N.ident:ident)
   flush
-  pushCom "or"
+  pushCom "o"
   pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:term dentro $hyp'N.ident:ident)
 
 implement_endpoint (lang := en) helpEqualSuggestion (hyp hyp' : Name) (closes : Bool) (l r : Expr) :
     SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} is an equality"
+  pushCom "L'assunzione {hyp} è un'uguaglianza"
   if closes then
-    pushComment <| s!"The current goal follows from it immediately"
+    pushComment <| s!"L'obiettivo attuale segue direttamente da questo"
     pushComment   "Si può utilizzare con:"
     pushTac `(tactic|Noi concludiamo per $hyp.ident:ident)
   else do
@@ -117,57 +117,57 @@ implement_endpoint (lang := en) helpEqualSuggestion (hyp hyp' : Name) (closes : 
     pushCom "Si può usare per sostituire il lato destro nell'obiettivo con:"
     pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident)
     flush
-    pushCom "One can also perform such replacements in an assumption {hyp'} with"
+    pushCom "Si possono anche eseguire tali sostituzioni nell'ipotesi {hyp'} con"
     pushTac `(tactic|Noi riscriviamo usando $hyp.ident:ident dentro $hyp'.ident:ident)
     flush
-    pushCom "or"
+    pushCom "o"
     pushTac `(tactic|Noi riscriviamo usando ← $hyp.ident:ident dentro $hyp'.ident:ident)
     flush
-    pushCom "One can also use it in a computation step, or combine it linearly to others with:"
+    pushCom "Si può usare in uno passaggio computazionale, o combinarlo linearmente con altri con:"
     pushTac `(tactic|Noi combiniamo [$hyp.ident:term, ?_])
-    pushCom "replacing the question mark by one or more terms proving equalities."
+    pushCom "sostituendo il punto interrogativo con uno o più termini che dimostrano uguaglianze."
 
 implement_endpoint (lang := en) helpIneqSuggestion (hyp : Name) (closes : Bool) : SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} is an inequality"
+  pushCom "L'assunzione {hyp} è un'uguaglianza"
   if closes then
     flush
-    pushCom "It immediately implies the current goal."
+    pushCom "Implica immediatamente l'obiettivo attuale."
     pushCom "Si può utilizzare con:"
     pushTac `(tactic|Noi concludiamo per $hyp.ident:ident)
   else do
     flush
-    pushCom "One can also use it in a computation step, or combine it linearly to others with:"
+    pushCom "Si può usare in uno passaggio computazionale, o combinarlo linearmente con altri con:"
     pushTac `(tactic|Noi combiniamo [$hyp.ident:term, ?_])
-    pushCom "replacing the question mark by one or more terms proving equalities or inequalities."
+    pushCom "sostituendo il punto interrogativo con uno o più termini che dimostrano uguaglianze."
 
 implement_endpoint (lang := en) helpMemInterSuggestion (hyp h₁ h₂ : Name) (elemS p₁S p₂S : Term) :
     SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} claims membership to an intersection"
+  pushCom "L'assunzione {hyp} afferma l'appartenenza ad un'intersezione"
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term otteniamo ($h₁.ident : $elemS ∈ $p₁S) ($h₂.ident : $elemS ∈ $p₂S))
   pushComment <| libres [h₁.ident, h₂.ident]
 
 implement_endpoint (lang := en) helpMemUnionSuggestion (hyp : Name) :
     SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} claims membership to a union"
+  pushCom "L'assunzione {hyp} afferma l'appartenenza ad un'unione"
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Noi procediamo usando $hyp.ident)
 
 implement_endpoint (lang := en) helpGenericMemSuggestion (hyp : Name) : SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} is a membership"
+  pushCom "L'assunzione {hyp} è un'appartenenza"
 
 implement_endpoint (lang := en) helpContradictiomSuggestion (hypId : Ident) : SuggestionM Unit := do
-  pushComment <| "This assumption is a contradiction."
-  pushCom "One can deduce anything from it with:"
+  pushComment <| "Questa ipotesi è una contraddizione."
+  pushCom "Si può dedurre qualuque cosa da essa con:"
   pushTac `(tactic|(Dimostriamo una contraddizione
                     Noi concludiamo per $hypId:ident))
 
 implement_endpoint (lang := en) helpSubsetSuggestion (hyp x hx hx' : Name)
     (r : Expr) (l ambientTypePP : Format) : SuggestionM Unit := do
-  pushCom "L'assunzione {hyp} ensures the inclusion of {l} in {← r.fmt}."
+  pushCom "L'assunzione {hyp} assicura l'inclusione di {l} in {← r.fmt}."
   pushCom "Si può utilizzare con:"
   pushTac `(tactic| Per $hyp.ident:ident applicato a $x.ident usando $hx.ident otteniamo $hx'.ident:ident : $x.ident ∈ $(← r.stx))
-  pushCom "where {x} is {describe ambientTypePP} e {hx} proves that {x} ∈ {l}"
+  pushCom "dove {x} è {describe ambientTypePP} e {hx} dimostra che {x} ∈ {l}"
   pushComment <| libre hx'.ident
 
 implement_endpoint (lang := en) assumptionClosesSuggestion (hypId : Ident) : SuggestionM Unit := do
@@ -177,8 +177,8 @@ implement_endpoint (lang := en) assumptionClosesSuggestion (hypId : Ident) : Sug
 
 implement_endpoint (lang := en) assumptionUnfoldingSuggestion (hypId : Ident) (expandedHypTypeS : Term) :
     SuggestionM Unit := do
-  pushCom "This assumption comincia per the application of a definition."
-  pushCom "One can make it explicit with:"
+  pushCom "Questa ipotesi comincia con l'applicazione di una definizione."
+  pushCom "Si può rendere esplicita con:"
   pushTac `(tactic|Noi riformuliamo $hypId:ident come $expandedHypTypeS)
   flush
 
@@ -188,7 +188,7 @@ implement_endpoint (lang := en) helpForAllRelExistsRelSuggestion (hyp var_name' 
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo $var_name'.ident:ident tale che ($ineqIdent : $ineqS) e ($hn'S : $p'S))
-  pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {hypDescr}."
+  pushCom "dove {n₀} è {describe t} e {hn₀} una dimostrazione del fatto che {hypDescr}."
   pushComment <| libres [var_name'.ident, ineqIdent, hn'S]
 
 implement_endpoint (lang := en) helpForAllRelExistsSimpleSuggestion (hyp n' hn' n₀ hn₀ : Name)
@@ -196,7 +196,7 @@ implement_endpoint (lang := en) helpForAllRelExistsSimpleSuggestion (hyp n' hn' 
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo $n'.ident:ident tale che ($hn'.ident : $p'S))
-  pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {n₀rel}"
+  pushCom "dove {n₀} è {describe t} e {hn₀} una dimostrazione del fatto che {n₀rel}"
   pushComment <| libres [n'.ident, hn'.ident]
 
 implement_endpoint (lang := en) helpForAllRelGenericSuggestion (hyp n₀ hn₀ : Name)
@@ -204,7 +204,7 @@ implement_endpoint (lang := en) helpForAllRelGenericSuggestion (hyp n₀ hn₀ :
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo ($newsI : $pS))
-  pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {n₀rel}"
+  pushCom "dove {n₀} è {describe t} e {hn₀} una dimostrazione del fatto che {n₀rel}"
   pushComment <| libre newsI
 
 implement_endpoint (lang := en) helpForAllSimpleExistsRelSuggestion (hyp var_name' nn₀ : Name)
@@ -213,7 +213,7 @@ implement_endpoint (lang := en) helpForAllSimpleExistsRelSuggestion (hyp var_nam
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident otteniamo $var_name'.ident:ident tale che ($ineqIdent : $ineqS) e ($hn'S : $p'S))
-  pushCom "where {nn₀} is {describe t}"
+  pushCom "dove {nn₀} è {describe t}"
   pushComment <| libres [var_name'.ident, ineqIdent, hn'S]
 
 implement_endpoint (lang := en) helpForAllSimpleExistsSimpleSuggestion (hyp var_name' hn' nn₀  : Name)
@@ -221,7 +221,7 @@ implement_endpoint (lang := en) helpForAllSimpleExistsSimpleSuggestion (hyp var_
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident otteniamo $var_name'.ident:ident tale che ($hn'.ident : $p'S))
-  pushCom "where {nn₀} is {describe t}"
+  pushCom "dove {nn₀} è {describe t}"
   pushComment <| libres [var_name'.ident, hn'.ident]
 
 implement_endpoint (lang := en) helpForAllSimpleForAllRelSuggestion (hyp nn₀ var_name'₀ H h : Name)
@@ -229,7 +229,7 @@ implement_endpoint (lang := en) helpForAllSimpleForAllRelSuggestion (hyp nn₀ v
   pushCom "L'assunzione {hyp} comincia per “{headDescr}"
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident e $var_name'₀.ident usando $H.ident otteniamo ($h.ident : $p'S))
-  pushCom "where {nn₀} e {var_name'₀} are {describe_pl t} e {H} is a proof of {rel₀}"
+  pushCom "dove {nn₀} e {var_name'₀} sono {describe_pl t} e {H} è una dimostrazione di {rel₀}"
   pushComment <| libre h.ident
 
 implement_endpoint (lang := en) helpForAllSimpleGenericSuggestion (hyp nn₀ hn₀ : Name) (headDescr : String)
@@ -237,16 +237,16 @@ implement_endpoint (lang := en) helpForAllSimpleGenericSuggestion (hyp nn₀ hn�
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
   pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident otteniamo ($hn₀.ident : $pS))
-  pushCom "where {nn₀} is {describe t}"
+  pushCom "dove {nn₀} è {describe t}"
   pushComment <| libre hn₀.ident
   flush
-  pushCom "If this assumption won't be used again in its general shape, one can also specialize {hyp} with"
+  pushCom "Se questa ipotesi non verrà utilizzata nuovamente nella sua forma generale, si può specializzare {hyp} con"
   pushTac `(tactic|Noi applichiamo $hyp.ident:ident ad $nn₀.ident)
 
 implement_endpoint (lang := en) helpForAllSimpleGenericApplySuggestion (prf : Expr) (but : Format) :
     SuggestionM Unit := do
   let prfS ← prf.toMaybeApplied
-  pushCom "Since the goal is {but}, one can use:"
+  pushCom "Poiché l'obiettivo è {but}, si può usare:"
   pushTac `(tactic|Noi concludiamo per $prfS)
 
 implement_endpoint (lang := en) helpExistsSimpleSuggestion (hyp n hn : Name) (headDescr : String)
@@ -258,10 +258,10 @@ implement_endpoint (lang := en) helpExistsSimpleSuggestion (hyp n hn : Name) (he
 
 implement_endpoint (lang := en) helpDataSuggestion (hyp : Name) (t : Format) : SuggestionM Unit := do
   pushComment <| s!"The object {hyp}" ++ match t with
-    | "ℝ" => " is a fixed real number."
-    | "ℕ" => " is a fixed natural number."
-    | "ℤ" => " is a fixed integer."
-    | s => s!" : {s} is fixed."
+    | "ℝ" => " è un numero reale fissato."
+    | "ℕ" => " è un numero naturale fissato."
+    | "ℤ" => " è un intero fissato."
+    | s => s!" : {s} è fissato."
 
 implement_endpoint (lang := en) helpNothingSuggestion : SuggestionM Unit := do
   pushCom "Non ho nulla da dire su questa ipotesi."
@@ -272,23 +272,23 @@ implement_endpoint (lang := en) helpNothingGoalSuggestion : SuggestionM Unit := 
   flush
 
 def descrGoalHead (headDescr : String) : SuggestionM Unit :=
- pushCom "The goal comincia per “{headDescr}”"
+ pushCom "L'obiettivo comincia per “{headDescr}”"
 
 def descrGoalShape (headDescr : String) : SuggestionM Unit :=
- pushCom "The goal è della forma “{headDescr}”"
+ pushCom "L'obiettivo è della forma “{headDescr}”"
 
 def descrDirectProof : SuggestionM Unit :=
- pushCom "Hence a direct proof comincia per:"
+ pushCom "Quindi una dimostrazione diretta comincia per:"
 
 implement_endpoint (lang := en) helpUnfoldableGoalSuggestion (expandedGoalTypeS : Term) :
     SuggestionM Unit := do
-  pushCom "The goal comincia per the application of a definition."
-  pushCom "One can make it explicit with:"
+  pushCom "L'obiettivo comincia con l'applicazione di una definizione."
+  pushCom "Si può rendere esplicito con:"
   pushTac `(tactic|Dimostriamo che $expandedGoalTypeS)
   flush
 
 implement_endpoint (lang := en) helpAnnounceGoalSuggestion (actualGoalS : Term) : SuggestionM Unit := do
-  pushCom "The next step is to announce:"
+  pushCom "Il prossimo passo consiste nell'annunciare:"
   pushTac `(tactic| Dimostriamo ora che $actualGoalS)
 
 implement_endpoint (lang := en) helpFixSuggestion (headDescr : String) (ineqS : TSyntax `fixDecl) :
@@ -301,15 +301,15 @@ implement_endpoint (lang := en) helpExistsRelGoalSuggestion (headDescr : String)
     (fullTgtS : Term) : SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic|Dimostriamo che $n₀.ident works : $fullTgtS)
-  pushCom "replacing {n₀} by {describe t}"
+  pushTac `(tactic|Dimostriamo che $n₀.ident funziona : $fullTgtS)
+  pushCom "sostituendo {n₀} con {describe t}"
 
 implement_endpoint (lang := en) helpExistsGoalSuggestion (headDescr : String) (nn₀ : Name) (t : Format)
     (tgt : Term) : SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic|Dimostriamo che $nn₀.ident works : $tgt)
-  pushCom "replacing {nn₀} by {describe t}"
+  pushTac `(tactic|Dimostriamo che $nn₀.ident funziona : $tgt)
+  pushCom "sostituendo {nn₀} con {describe t}"
 
 implement_endpoint (lang := en) helpConjunctionGoalSuggestion (p p' : Term) : SuggestionM Unit := do
   descrGoalShape "... e ..."
@@ -338,7 +338,7 @@ implement_endpoint (lang := en) helpImplicationGoalSuggestion (headDescr : Strin
 
 implement_endpoint (lang := en) helpEquivalenceGoalSuggestion (r l : Format) (rS lS : Term) :
     SuggestionM Unit := do
-  pushCom "The goal è un'equivalenza. One can announce the proof of the left to right implication with:"
+  pushCom "L'obiettivo è un'equivalenza. One can announce the proof of the left to right implication with:"
   pushTac `(tactic|Dimostriamo che $lS → $rS)
   pushCom "After proving this first statement, it will remain to prove that {r} → {l}"
   flush
@@ -348,7 +348,7 @@ implement_endpoint (lang := en) helpEquivalenceGoalSuggestion (r l : Format) (rS
 
 implement_endpoint (lang := en) helpSetEqSuggestion (l r : Format) (lS rS : Term) : SuggestionM Unit := do
   -- **FIXME** this discussion isn't easy to do using tactics.
-  pushCom "The goal is a set equality"
+  pushCom "L'obiettivo is a set equality"
   pushCom "One can prove it by rewriting with `Noi riscriviamo usando`"
   pushCom "or start a computation usando"
   pushCom "  calc {l} = sorry := by sorry"
@@ -359,7 +359,7 @@ implement_endpoint (lang := en) helpSetEqSuggestion (l r : Format) (lS rS : Term
 
 implement_endpoint (lang := en) helpEqGoalSuggestion (l r : Format) : SuggestionM Unit := do
   -- **FIXME** this discussion isn't easy to do using tactics.
-  pushCom "The goal is an equality"
+  pushCom "L'obiettivo is an equality"
   pushCom "One can prove it by rewriting with `Noi riscriviamo usando`"
   pushCom "or start a computation using"
   pushCom "  calc {l} = sorry := by sorry"
@@ -370,7 +370,7 @@ implement_endpoint (lang := en) helpEqGoalSuggestion (l r : Format) : Suggestion
 
 implement_endpoint (lang := en) helpIneqGoalSuggestion (l r : Format) (rel : String) : SuggestionM Unit := do
   -- **FIXME** this discussion isn't easy to do using tactics.
-  pushCom "The goal is an inequality"
+  pushCom "L'obiettivo è un'uguaglianza"
   pushCom "One can start a computation using"
   pushCom "  calc {l}{rel}sorry := by sorry "
   pushCom "  ... = {r} := by sorry "
@@ -428,7 +428,7 @@ set_option linter.unusedTactic false
 
 /--
 info: Aiuto
-• Per h applicato a n₀ usando hn₀ otteniamo (hyp : P n₀)
+• Per h applicato a n₀ usando✝ hn₀ otteniamo (hyp : P n₀)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∀ n > 0, P n) : P 2 := by
@@ -457,7 +457,7 @@ example {P : ℝ → Prop} (h : ∃ ε > 0, P ε) : True := by
 /--
 info: Aiuto
 • Per h applicato a n₀ otteniamo (hn₀ : P n₀ ⇒ Q n₀)
-• Noi applichiamo h a n₀
+• Noi applichiamo h ad n₀
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
@@ -467,7 +467,7 @@ example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
 /--
 info: Aiuto
 • Per h applicato a n₀ otteniamo (hn₀ : P n₀)
-• Noi applichiamo h to n₀
+• Noi applichiamo h ad n₀
 • Noi concludiamo per h applicato a 2
 -/
 #guard_msgs in
@@ -507,8 +507,8 @@ example (P Q : ℕ → Prop) (h : P 1 ∧ Q 2) : True := by
 info: Aiuto
 • Noi riscriviamo usando h
 • Noi riscriviamo usando ← h
-• Noi riscriviamo usando h dentro hyp
-• Noi riscriviamo usando ← h dentro hyp
+• Noi riscriviamo usando h dentro✝ hyp
+• Noi riscriviamo usando ← h dentro✝ hyp
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : (∀ n ≥ 2, P n) ↔  ∀ l, Q l) : True := by
@@ -573,7 +573,7 @@ example (P : ℕ → ℕ → Prop) (k l n : ℕ) (h : l - n = 0 → P l k) : Tru
 
 /--
 info: Aiuto
-• Per h applicato a k₀ usando hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
+• Per h applicato a k₀ usando✝ hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -582,7 +582,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n =
 
 /--
 info: Aiuto
-• Per h applicato a k₀ e n₀ usando H otteniamo (h_1 : ∀ (l : ℕ), l - n₀ = 0 ⇒ P l k₀)
+• Per h applicato a k₀ e n₀ usando✝ H otteniamo (h_1 : ∀ (l : ℕ), l - n₀ = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k, ∀ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -591,7 +591,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k, ∀ n ≥ 3, ∀ l, l - n = 0 →
 
 /--
 info: Aiuto
-• Per h applicato a k₀ usando hk₀ otteniamo n_1 tale che (n_1_sup : n_1 ≥ 3) e (hn_1 : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
+• Per h applicato a k₀ usando✝ hk₀ otteniamo n_1 tale che (n_1_sup : n_1 ≥ 3) e (hn_1 : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (n : ℕ) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
@@ -609,7 +609,7 @@ example (P : ℕ → Prop) (h : ∃ n ≥ 5, P n) : True := by
 
 /--
 info: Aiuto
-• Per h applicato a k₀ usando hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : P n k₀)
+• Per h applicato a k₀ usando✝ hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, P n k) : True := by
@@ -636,7 +636,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k, ∃ n : ℕ, P n k) : True := by
 
 /--
 info: Aiuto
-• Per h applicato a k₀ usando hk₀ otteniamo n tale che (hn : P n k₀)
+• Per h applicato a k₀ usando✝ hk₀ otteniamo n tale che (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n : ℕ, P n k) : True := by
@@ -645,7 +645,7 @@ example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n : ℕ, P n k) : True 
 
 /--
 info: Aiuto
-• Dimostriamo che n₀ works: P n₀ ⇒ True
+• Dimostriamo che n₀ funziona: P n₀ ⇒ True
 -/
 #guard_msgs in
 example (P : ℕ → Prop): ∃ n : ℕ, P n → True := by
@@ -683,7 +683,7 @@ example : ∀ n : ℕ, 0 ≤ n := by
 
 /--
 info: Aiuto
-• Dimostriamo che n₀ works: 0 ≤ n₀
+• Dimostriamo che n₀ funziona: 0 ≤ n₀
 -/
 #guard_msgs in
 example : ∃ n : ℕ, 0 ≤ n := by
@@ -693,7 +693,7 @@ example : ∃ n : ℕ, 0 ≤ n := by
 
 /--
 info: Aiuto
-• Dimostriamo che n₀ works: n₀ ≥ 1 ∧ True
+• Dimostriamo che n₀ funziona: n₀ ≥ 1 ∧ True
 -/
 #guard_msgs in
 example : ∃ n ≥ 1, True := by
@@ -711,7 +711,7 @@ info: Aiuto
 • Sia x ∈ s
 ---
 info: Aiuto
-• Per h applicato a x_1 usando hx otteniamo hx' : x_1 ∈ t
+• Per h applicato a x_1 usando✝ hx otteniamo hx' : x_1 ∈ t
 -/
 #guard_msgs in
 example (s t : Set ℕ) (h : s ⊆ t) : s ⊆ t := by

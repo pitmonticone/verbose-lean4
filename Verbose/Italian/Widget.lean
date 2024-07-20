@@ -23,8 +23,8 @@ let newStuff ← listMaybeTypedIdentToNewStuffSuchThatEN news
 `(tactic|By $maybeApp we get $newStuff)
 
 implement_endpoint (lang := en) mkUseTacStx (wit : Term) : Option Term → MetaM (TSyntax `tactic)
-| some goal => `(tactic|Let's prove that $wit works : $goal)
-| none => `(tactic|Let's prove that $wit works)
+| some goal => `(tactic|Let's prove that $wit funziona : $goal)
+| none => `(tactic|Let's prove that $wit funziona)
 
 implement_endpoint (lang := en) mkSinceTacStx (facts : Array Term) (concl : Term) :
     MetaM (TSyntax `tactic) := do

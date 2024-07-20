@@ -10,7 +10,7 @@ Proof:
   By hf applied to ε using that ε > 0 we get δ such that
     (δ_pos : δ > 0) and (Hf : ∀ x, |x - x₀| ≤ δ ⇒ |f x - f x₀| ≤ ε)
   By hu applied to δ using that δ > 0 we get N such that Hu : ∀ n ≥ N, |u n - x₀| ≤ δ
-  Let's prove that N works : ∀ n ≥ N, |f (u n) - f x₀| ≤ ε
+  Let's prove that N funziona : ∀ n ≥ N, |f (u n) - f x₀| ≤ ε
   Fix n ≥ N
   By Hf applied to u n it suffices to prove |u n - x₀| ≤ δ
   We conclude by Hu applied to n using that n ≥ N
@@ -27,7 +27,7 @@ Proof:
   Since f is continuous at x₀ and ε > 0 we get δ such that
     (δ_pos : δ > 0) and (Hf : ∀ x, |x - x₀| ≤ δ ⇒ |f x - f x₀| ≤ ε)
   Since u converges to x₀ and δ > 0 we get N such that Hu : ∀ n ≥ N, |u n - x₀| ≤ δ
-  Let's prove that N works : ∀ n ≥ N, |f (u n) - f x₀| ≤ ε
+  Let's prove that N funziona : ∀ n ≥ N, |f (u n) - f x₀| ≤ ε
   Fix n ≥ N
   Since ∀ x, |x - x₀| ≤ δ → |f x - f x₀| ≤ ε it suffices to prove that |u n - x₀| ≤ δ
   Since ∀ n ≥ N, |u n - x₀| ≤ δ and n ≥ N we conclude that |u n - x₀| ≤ δ
@@ -43,7 +43,7 @@ Example "Constant sequences converge."
 Proof:
   Fix ε > 0
   Let's prove that ∃ N, ∀ n ≥ N, |u n - l| ≤ ε
-  Let's prove that 0 works
+  Let's prove that 0 funziona
   Fix n ≥ 0
   Calc |u n - l| = |l - l| by We rewrite using h
    _             = 0       by We compute
@@ -56,7 +56,7 @@ Example "A sequence converging to a positive limit is ultimately positive."
   Conclusion: ∃ N, ∀ n ≥ N, u n ≥ l/2
 Proof:
   By h applied to l/2 using that l/2 > 0 we get N such that hN : ∀ n ≥ N, |u n - l| ≤ l/2
-  Let's prove that N works
+  Let's prove that N funziona
   Fix n ≥ N
   By hN applied to n using that n ≥ N we get hN' : |u n - l| ≤ l/2
   By hN' we get (h₁ : -(l/2) ≤ u n - l) (h₂ : u n - l ≤ l/2)
@@ -74,7 +74,7 @@ Proof:
       such that (hN₁ : ∀ n ≥ N₁, |u n - l| ≤ ε / 2)
   By hv applied to ε/2 using that ε/2 > 0 we get N₂
       such that (hN₂ : ∀ n ≥ N₂, |v n - l'| ≤ ε / 2)
-  Let's prove that max N₁ N₂ works
+  Let's prove that max N₁ N₂ funziona
   Fix n ≥ max N₁ N₂
   By n_ge we get (hn₁ : N₁ ≤ n) (hn₂ : N₂ ≤ n)
   Fact fact₁ : |u n - l| ≤ ε/2
@@ -99,7 +99,7 @@ Proof:
   Fix ε > 0
   Since u converges to l and ε > 0 we get N such that hN : ∀ n ≥ N, |u n - l| ≤ ε
   Since w converges to l and ε > 0 we get N' such that hN' : ∀ n ≥ N', |w n - l| ≤ ε
-  Let's prove that max N N' works : ∀ n ≥ max N N', |v n - l| ≤ ε
+  Let's prove that max N N' funziona : ∀ n ≥ max N N', |v n - l| ≤ ε
   Fix n ≥ max N N'
   Since n ≥ max N N' we get (hn : n ≥ N) and (hn' : n ≥ N')
   Since ∀ n ≥ N, |u n - l| ≤ ε and n ≥ N we get
@@ -125,7 +125,7 @@ Proof:
   Fix ε > 0
   By hyp applied to ε/2 using that ε/2 > 0 we get N
       such that hN : ∀ n ≥ N, |u n - l| ≤ ε / 2
-  Let's prove that N works
+  Let's prove that N funziona
   Fix n ≥ N
   Calc |u n - l| ≤ ε/2  from hN applied to n using that n ≥ N
        _         < ε    since ε > 0
@@ -133,7 +133,7 @@ Proof:
   Assume hyp : ∀ ε > 0, ∃ N, ∀ n ≥ N, |u n - l| < ε
   Fix ε > 0
   By hyp applied to ε using that ε > 0 we get N such that hN : ∀ n ≥ N, |u n - l| < ε
-  Let's prove that N works
+  Let's prove that N funziona
   Fix n ≥ N
   We conclude by hN applied to n using that n ≥ N
 QED
@@ -169,7 +169,7 @@ Proof:
   By h we get (inf_M : ∀ (n : ℕ), u n ≤ M)
                    (sup_M_ep : ∀ ε > 0, ∃ (n₀ : ℕ), u n₀ ≥ M - ε)
   By sup_M_ep applied to ε using that ε > 0 we get n₀ such that (hn₀ : u n₀ ≥ M - ε)
-  Let's prove that n₀ works : ∀ n ≥ n₀, |u n - M| ≤ ε
+  Let's prove that n₀ funziona : ∀ n ≥ n₀, |u n - M| ≤ ε
   Fix n ≥ n₀
   By inf_M applied to n we get (inf_M' : u n ≤ M)
   Let's first prove that -ε ≤ u n - M
