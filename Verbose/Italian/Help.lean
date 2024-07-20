@@ -159,14 +159,14 @@ implement_endpoint (lang := en) helpGenericMemSuggestion (hyp : Name) : Suggesti
 implement_endpoint (lang := en) helpContradictiomSuggestion (hypId : Ident) : SuggestionM Unit := do
   pushComment <| "This assumption is a contradiction."
   pushCom "One can deduce anything from it with:"
-  pushTac `(tactic|(Let's prove it's contradictory
+  pushTac `(tactic|(Dimostriamo una contraddizione
                     Noi concludiamo per $hypId:ident))
 
 implement_endpoint (lang := en) helpSubsetSuggestion (hyp x hx hx' : Name)
     (r : Expr) (l ambientTypePP : Format) : SuggestionM Unit := do
   pushCom "L'assunzione {hyp} ensures the inclusion of {l} in {← r.fmt}."
   pushCom "Si può utilizzare con:"
-  pushTac `(tactic| Per $hyp.ident:ident applicato a $x.ident using $hx.ident otteniamo $hx'.ident:ident : $x.ident ∈ $(← r.stx))
+  pushTac `(tactic| Per $hyp.ident:ident applicato a $x.ident usando $hx.ident otteniamo $hx'.ident:ident : $x.ident ∈ $(← r.stx))
   pushCom "where {x} is {describe ambientTypePP} e {hx} proves that {x} ∈ {l}"
   pushComment <| libre hx'.ident
 
@@ -179,7 +179,7 @@ implement_endpoint (lang := en) assumptionUnfoldingSuggestion (hypId : Ident) (e
     SuggestionM Unit := do
   pushCom "This assumption comincia per the application of a definition."
   pushCom "One can make it explicit with:"
-  pushTac `(tactic|We reformulate $hypId:ident as $expandedHypTypeS)
+  pushTac `(tactic|Noi riformuliamo $hypId:ident come $expandedHypTypeS)
   flush
 
 implement_endpoint (lang := en) helpForAllRelExistsRelSuggestion (hyp var_name' n₀ hn₀ : Name)
@@ -187,7 +187,7 @@ implement_endpoint (lang := en) helpForAllRelExistsRelSuggestion (hyp var_name' 
     SuggestionM Unit := do
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
-  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident using $hn₀.ident otteniamo $var_name'.ident:ident tale che ($ineqIdent : $ineqS) e ($hn'S : $p'S))
+  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo $var_name'.ident:ident tale che ($ineqIdent : $ineqS) e ($hn'S : $p'S))
   pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {hypDescr}."
   pushComment <| libres [var_name'.ident, ineqIdent, hn'S]
 
@@ -195,7 +195,7 @@ implement_endpoint (lang := en) helpForAllRelExistsSimpleSuggestion (hyp n' hn' 
     (headDescr n₀rel : String) (t : Format) (p'S : Term) : SuggestionM Unit := do
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
-  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident using $hn₀.ident otteniamo $n'.ident:ident tale che ($hn'.ident : $p'S))
+  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo $n'.ident:ident tale che ($hn'.ident : $p'S))
   pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {n₀rel}"
   pushComment <| libres [n'.ident, hn'.ident]
 
@@ -203,7 +203,7 @@ implement_endpoint (lang := en) helpForAllRelGenericSuggestion (hyp n₀ hn₀ :
     (headDescr n₀rel : String) (t : Format) (newsI : Ident) (pS : Term) : SuggestionM Unit := do
   describeHypStart hyp headDescr
   pushCom "Si può utilizzare con:"
-  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident using $hn₀.ident otteniamo ($newsI : $pS))
+  pushTac `(tactic|Per $hyp.ident:term applicato a $n₀.ident usando $hn₀.ident otteniamo ($newsI : $pS))
   pushCom "where {n₀} is {describe t} e {hn₀} is a proof of the fact that {n₀rel}"
   pushComment <| libre newsI
 
@@ -228,7 +228,7 @@ implement_endpoint (lang := en) helpForAllSimpleForAllRelSuggestion (hyp nn₀ v
     (headDescr rel₀ : String) (t : Format) (p'S : Term) : SuggestionM Unit := do
   pushCom "L'assunzione {hyp} comincia per “{headDescr}"
   pushCom "Si può utilizzare con:"
-  pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident e $var_name'₀.ident using $H.ident otteniamo ($h.ident : $p'S))
+  pushTac `(tactic|Per $hyp.ident:term applicato a $nn₀.ident e $var_name'₀.ident usando $H.ident otteniamo ($h.ident : $p'S))
   pushCom "where {nn₀} e {var_name'₀} are {describe_pl t} e {H} is a proof of {rel₀}"
   pushComment <| libre h.ident
 
@@ -241,7 +241,7 @@ implement_endpoint (lang := en) helpForAllSimpleGenericSuggestion (hyp nn₀ hn�
   pushComment <| libre hn₀.ident
   flush
   pushCom "If this assumption won't be used again in its general shape, one can also specialize {hyp} with"
-  pushTac `(tactic|We apply $hyp.ident:ident to $nn₀.ident)
+  pushTac `(tactic|Noi applichiamo $hyp.ident:ident a $nn₀.ident)
 
 implement_endpoint (lang := en) helpForAllSimpleGenericApplySuggestion (prf : Expr) (but : Format) :
     SuggestionM Unit := do
@@ -284,78 +284,78 @@ implement_endpoint (lang := en) helpUnfoldableGoalSuggestion (expandedGoalTypeS 
     SuggestionM Unit := do
   pushCom "The goal comincia per the application of a definition."
   pushCom "One can make it explicit with:"
-  pushTac `(tactic|Let's prove that $expandedGoalTypeS)
+  pushTac `(tactic|Dimostriamo che $expandedGoalTypeS)
   flush
 
 implement_endpoint (lang := en) helpAnnounceGoalSuggestion (actualGoalS : Term) : SuggestionM Unit := do
   pushCom "The next step is to announce:"
-  pushTac `(tactic| Let's now prove that $actualGoalS)
+  pushTac `(tactic| Dimostriamo ora che $actualGoalS)
 
 implement_endpoint (lang := en) helpFixSuggestion (headDescr : String) (ineqS : TSyntax `fixDecl) :
     SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic|Fix $ineqS)
+  pushTac `(tactic|Sia $ineqS)
 
 implement_endpoint (lang := en) helpExistsRelGoalSuggestion (headDescr : String) (n₀ : Name) (t : Format)
     (fullTgtS : Term) : SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic|Let's prove that $n₀.ident works : $fullTgtS)
+  pushTac `(tactic|Dimostriamo che $n₀.ident works : $fullTgtS)
   pushCom "replacing {n₀} by {describe t}"
 
 implement_endpoint (lang := en) helpExistsGoalSuggestion (headDescr : String) (nn₀ : Name) (t : Format)
     (tgt : Term) : SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic|Let's prove that $nn₀.ident works : $tgt)
+  pushTac `(tactic|Dimostriamo che $nn₀.ident works : $tgt)
   pushCom "replacing {nn₀} by {describe t}"
 
 implement_endpoint (lang := en) helpConjunctionGoalSuggestion (p p' : Term) : SuggestionM Unit := do
   descrGoalShape "... e ..."
   descrDirectProof
-  pushTac `(tactic|Let's first prove that $p)
+  pushTac `(tactic|Dimostriamo prima che $p)
   pushCom "After finish this first proof, it will remain to prove that {← p'.fmt}"
   flush
   pushCom "One can also start with"
-  pushTac `(tactic|Let's first prove that $p')
+  pushTac `(tactic|Dimostriamo prima che $p')
   pushCom "then, after finishing this first proof, il will remain to prove that {← p.fmt}"
 
 implement_endpoint (lang := en) helpDisjunctionGoalSuggestion (p p' : Term) : SuggestionM Unit := do
   descrGoalShape "... or ..."
   pushCom "Hence a direct proof comincia per announcing which alternative will be proven:"
-  pushTac `(tactic|Let's prove that $p)
+  pushTac `(tactic|Dimostriamo che $p)
   flush
   pushCom "or:"
-  pushTac `(tactic|Let's prove that $p')
+  pushTac `(tactic|Dimostriamo che $p')
 
 implement_endpoint (lang := en) helpImplicationGoalSuggestion (headDescr : String) (Hyp : Name)
     (leStx : Term) : SuggestionM Unit := do
   descrGoalHead headDescr
   descrDirectProof
-  pushTac `(tactic| Assume $Hyp.ident:ident : $leStx)
+  pushTac `(tactic| Assumiamo $Hyp.ident:ident : $leStx)
   pushComment <| libre Hyp.ident
 
 implement_endpoint (lang := en) helpEquivalenceGoalSuggestion (r l : Format) (rS lS : Term) :
     SuggestionM Unit := do
   pushCom "The goal è un'equivalenza. One can announce the proof of the left to right implication with:"
-  pushTac `(tactic|Let's prove that $lS → $rS)
+  pushTac `(tactic|Dimostriamo che $lS → $rS)
   pushCom "After proving this first statement, it will remain to prove that {r} → {l}"
   flush
   pushCom "One can also start with"
-  pushTac `(tactic|Let's prove that $rS → $lS)
+  pushTac `(tactic|Dimostriamo che $rS → $lS)
   pushCom "then, after finishing this first proof, il will remain to prove that {l} → {r}"
 
 implement_endpoint (lang := en) helpSetEqSuggestion (l r : Format) (lS rS : Term) : SuggestionM Unit := do
   -- **FIXME** this discussion isn't easy to do using tactics.
   pushCom "The goal is a set equality"
   pushCom "One can prove it by rewriting with `Noi riscriviamo usando`"
-  pushCom "or start a computation using"
+  pushCom "or start a computation usando"
   pushCom "  calc {l} = sorry := by sorry"
   pushCom "  ... = {r} := by sorry"
   pushCom "One can also prove it by double inclusion."
   pushCom "In this case the proof comincia per:"
-  pushTac `(tactic|Let's first prove that $lS ⊆ $rS)
+  pushTac `(tactic|Dimostriamo prima che $lS ⊆ $rS)
 
 implement_endpoint (lang := en) helpEqGoalSuggestion (l r : Format) : SuggestionM Unit := do
   -- **FIXME** this discussion isn't easy to do using tactics.
@@ -384,15 +384,15 @@ implement_endpoint (lang := en) helpIneqGoalSuggestion (l r : Format) (rel : Str
 implement_endpoint (lang := en) helpMemInterGoalSuggestion (elem le : Expr) : SuggestionM Unit := do
   pushCom "The goal is prove {← elem.fmt} belongs to the intersection of {← le.fmt} with another set."
   pushCom "Hance a direct proof comincia per:"
-  pushTac `(tactic|Let's first prove that $(← elem.stx) ∈ $(← le.stx))
+  pushTac `(tactic|Dimostriamo prima che $(← elem.stx) ∈ $(← le.stx))
 
 implement_endpoint (lang := en) helpMemUnionGoalSuggestion (elem le re : Expr) : SuggestionM Unit := do
   pushCom "The goal is to prove {← elem.fmt} belongs to the union of {← le.fmt} e {← re.fmt}."
   descrDirectProof
-  pushTac `(tactic|Let's prove that $(← elem.stx) ∈ $(← le.stx))
+  pushTac `(tactic|Dimostriamo che $(← elem.stx) ∈ $(← le.stx))
   flush
   pushCom "or by:"
-  pushTac `(tactic|Let's prove that $(← elem.stx) ∈ $(← re.stx))
+  pushTac `(tactic|Dimostriamo che $(← elem.stx) ∈ $(← re.stx))
 
 implement_endpoint (lang := en) helpNoIdeaGoalSuggestion : SuggestionM Unit := do
   pushCom "No idea."
@@ -401,7 +401,7 @@ implement_endpoint (lang := en) helpSubsetGoalSuggestion (l r : Format) (xN : Na
     SuggestionM Unit := do
   pushCom "The goal is the inclusion {l} ⊆ {r}"
   descrDirectProof
-  pushTac `(tactic| Fix $xN.ident:ident ∈ $lT)
+  pushTac `(tactic| Sia $xN.ident:ident ∈ $lT)
   pushComment <| libre xN.ident
 
 implement_endpoint (lang := en) helpFalseGoalSuggestion : SuggestionM Unit := do
@@ -410,13 +410,13 @@ implement_endpoint (lang := en) helpFalseGoalSuggestion : SuggestionM Unit := do
   pushCom "namely, by definition, with shape P → false."
 
 implement_endpoint (lang := en) helpContraposeGoalSuggestion : SuggestionM Unit := do
-  pushCom "The goal è un'implicazione."
-  pushCom "One can start a proof by contraposition using"
-  pushTac `(tactic| We contrapose)
+  pushCom "L'obiettivo è un'implicazione."
+  pushCom "Si può cominciare una dimostrazione per contrapposizione usando"
+  pushTac `(tactic| Noi contrapponiamo)
 
 implement_endpoint (lang := en) helpByContradictionSuggestion (hyp : Ident) (assum : Term) : SuggestionM Unit := do
-  pushCom "One can start a proof by contradiction using"
-  pushTac `(tactic| Assume for contradiction $hyp:ident : $assum)
+  pushCom "Si può cominciare una dimostrazione per assurdo usando"
+  pushTac `(tactic| Assumiamo per assurdo $hyp:ident : $assum)
 
 set_option linter.unusedVariables false
 
@@ -427,84 +427,84 @@ configureHelpProviders DefaultHypHelp DefaultGoalHelp
 set_option linter.unusedTactic false
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a n₀ using hn₀ otteniamo (hyp : P n₀)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∀ n > 0, P n) : P 2 := by
-  help h
+  aiuto h
   apply h
   norm_num
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo n tale che (n_pos : n > 0) e (hn : P n)
 -/
 #guard_msgs in
 example {P : ℕ → Prop} (h : ∃ n > 0, P n) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo ε tale che (ε_pos : ε > 0) e (hε : P ε)
 -/
 #guard_msgs in
 example {P : ℝ → Prop} (h : ∃ ε > 0, P ε) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a n₀ otteniamo (hn₀ : P n₀ ⇒ Q n₀)
-• We apply h to n₀
+• Noi applichiamo h to n₀
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : ∀ n, P n → Q n) (h' : P 2) : Q 2 := by
-  help h
+  aiuto h
   exact h 2 h'
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a n₀ otteniamo (hn₀ : P n₀)
-• We apply h to n₀
+• Noi applichiamo h to n₀
 • Noi concludiamo per h applicato a 2
 -/
 #guard_msgs in
 example (P : ℕ → Prop) (h : ∀ n, P n) : P 2 := by
-  help h
+  aiuto h
   exact h 2
 
 /--
-info: Help
+info: Aiuto
 • By h è sufficiente dimostrare P 1
 • Noi concludiamo per h applicato a H
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 → Q 2) (h' : P 1) : Q 2 := by
-  help h
+  aiuto h
   exact h h'
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a H otteniamo H' : Q 2
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 → Q 2) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo (h_1 : P 1) (h' : Q 2)
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 ∧ Q 2) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • Noi riscriviamo usando h
 • Noi riscriviamo usando ← h
 • Noi riscriviamo usando h at hyp
@@ -512,324 +512,324 @@ info: Help
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : (∀ n ≥ 2, P n) ↔  ∀ l, Q l) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
-• Let's first prove that True
-• Let's first prove that 1 = 1
+info: Aiuto
+• Dimostriamo prima che True
+• Dimostriamo prima che 1 = 1
 -/
 #guard_msgs in
 example : True ∧ 1 = 1 := by
-  help
+  aiuto
   exact ⟨trivial, rfl⟩
 
 /--
-info: Help
+info: Aiuto
 • Noi procediamo usando h
 -/
 #guard_msgs in
 example (P Q : ℕ → Prop) (h : P 1 ∨ Q 2) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
-• Let's prove that True
-• Let's prove that False
+info: Aiuto
+• Dimostriamo che True
+• Dimostriamo che False
 -/
 #guard_msgs in
 example : True ∨ False := by
-  help
+  aiuto
   left
   trivial
 
 /-- info: I have nothing to say about this assumption. -/
 #guard_msgs in
 example (P : Prop) (h : P) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • (
-  Let's prove it's contradictory
+  Dimostriamo una contraddizione
   Noi concludiamo per h)
 -/
 #guard_msgs in
 example (h : False) : 0 = 1 := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a H otteniamo H' : P l k
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (k l n : ℕ) (h : l - n = 0 → P l k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ using hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ e n₀ using H otteniamo (h_1 : ∀ (l : ℕ), l - n₀ = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k, ∀ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ using hk₀ otteniamo n_1 tale che (n_1_sup : n_1 ≥ 3) e (hn_1 : ∀ (l : ℕ), l - n = 0 ⇒ P l k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (n : ℕ) (h : ∀ k ≥ 2, ∃ n ≥ 3, ∀ l, l - n = 0 → P l k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo n tale che (n_sup : n ≥ 5) e (hn : P n)
 -/
 #guard_msgs in
 example (P : ℕ → Prop) (h : ∃ n ≥ 5, P n) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ using hk₀ otteniamo n tale che (n_sup : n ≥ 3) e (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n ≥ 3, P n k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo n tale che (hn : P n)
 -/
 #guard_msgs in
 example (P : ℕ → Prop) (h : ∃ n : ℕ, P n) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ otteniamo n tale che (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k, ∃ n : ℕ, P n k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h applicato a k₀ using hk₀ otteniamo n tale che (hn : P n k₀)
 -/
 #guard_msgs in
 example (P : ℕ → ℕ → Prop) (h : ∀ k ≥ 2, ∃ n : ℕ, P n k) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
-• Let's prove that n₀ works: P n₀ ⇒ True
+info: Aiuto
+• Dimostriamo che n₀ works: P n₀ ⇒ True
 -/
 #guard_msgs in
 example (P : ℕ → Prop): ∃ n : ℕ, P n → True := by
-  help
+  aiuto
   use 0
   tauto
 
 /--
-info: Help
-• Assume hyp : P
+info: Aiuto
+• Assumiamo hyp : P
 -/
 #guard_msgs in
 example (P Q : Prop) (h : Q) : P → Q := by
-  help
+  aiuto
   exact fun _ ↦ h
 
 /--
-info: Help
-• Fix n ≥ 0
+info: Aiuto
+• Sia n ≥ 0
 -/
 #guard_msgs in
 example : ∀ n ≥ 0, True := by
-  help
+  aiuto
   intros
   trivial
 
 /--
-info: Help
-• Fix n : ℕ
+info: Aiuto
+• Sia n : ℕ
 -/
 #guard_msgs in
 example : ∀ n : ℕ, 0 ≤ n := by
-  help
+  aiuto
   exact Nat.zero_le
 
 /--
-info: Help
-• Let's prove that n₀ works: 0 ≤ n₀
+info: Aiuto
+• Dimostriamo che n₀ works: 0 ≤ n₀
 -/
 #guard_msgs in
 example : ∃ n : ℕ, 0 ≤ n := by
-  help
+  aiuto
   use 1
   exact Nat.zero_le 1
 
 /--
-info: Help
-• Let's prove that n₀ works: n₀ ≥ 1 ∧ True
+info: Aiuto
+• Dimostriamo che n₀ works: n₀ ≥ 1 ∧ True
 -/
 #guard_msgs in
 example : ∃ n ≥ 1, True := by
-  help
+  aiuto
   use 1
 
 /-- info: I have nothing to say about this assumption. -/
 #guard_msgs in
 example (h : Odd 3) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
-• Fix x ∈ s
+info: Aiuto
+• Sia x ∈ s
 ---
-info: Help
+info: Aiuto
 • By h applicato a x_1 using hx otteniamo hx' : x_1 ∈ t
 -/
 #guard_msgs in
 example (s t : Set ℕ) (h : s ⊆ t) : s ⊆ t := by
-  help
-  Fix x ∈ s
-  help h
+  aiuto
+  Sia x ∈ s
+  aiuto h
   exact h x_mem
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
 -/
 #guard_msgs in
 example (s t : Set ℕ) (x : ℕ) (h : x ∈ s ∩ t) : x ∈ s := by
-  help h
+  aiuto h
   By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
   exact h_1
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
 ---
-info: Help
-• Let's first prove that x ∈ t
+info: Aiuto
+• Dimostriamo prima che x ∈ t
 ---
-info: Help
-• Let's now prove that x ∈ s
+info: Aiuto
+• Dimostriamo ora che x ∈ s
 -/
 #guard_msgs in
 example (s t : Set ℕ) (x : ℕ) (h : x ∈ s ∩ t) : x ∈ t ∩ s := by
-  help h
+  aiuto h
   By h otteniamo (h_1 : x ∈ s) (h' : x ∈ t)
-  help
-  Let's first prove that x ∈ t
+  aiuto
+  Dimostriamo prima che x ∈ t
   exact h'
-  help
-  Let's now prove that x ∈ s
+  aiuto
+  Dimostriamo ora che x ∈ s
   exact h_1
 
 /--
-info: Help
+info: Aiuto
 • Noi procediamo usando h
 ---
-info: Help
-• Let's prove that x ∈ t
-• Let's prove that x ∈ s
+info: Aiuto
+• Dimostriamo che x ∈ t
+• Dimostriamo che x ∈ s
 -/
 #guard_msgs in
 example (s t : Set ℕ) (x : ℕ) (h : x ∈ s ∪ t) : x ∈ t ∪ s := by
-  help h
+  aiuto h
   Noi procediamo usando h
-  Assume hyp : x ∈ s
-  help
-  Let's prove that x ∈ s
+  Assumiamo hyp : x ∈ s
+  aiuto
+  Dimostriamo che x ∈ s
   exact hyp
-  Assume hyp : x ∈ t
-  Let's prove that x ∈ t
+  Assumiamo hyp : x ∈ t
+  Dimostriamo che x ∈ t
   exact  hyp
 
 /--
-info: Help
-• Assume hyp : False
+info: Aiuto
+• Assumiamo hyp : False
 -/
 #guard_msgs in
 example : False → True := by
-  help
+  aiuto
   simp
 
 /-- info: I have nothing to say about this goal. -/
 #guard_msgs in
 example : True := by
-  help
+  aiuto
   trivial
 
 configureHelpProviders DefaultHypHelp DefaultGoalHelp helpContraposeGoal
 
 /--
-info: Help
-• Assume hyp : False
-• We contrapose
+info: Aiuto
+• Assumiamo hyp : False
+• Noi contrapponiamo
 -/
 #guard_msgs in
 example : False → True := by
-  help
-  We contrapose
+  aiuto
+  Noi contrapponiamo
   simp
 
 /-- info: I have nothing to say about this goal. -/
 #guard_msgs in
 example : True := by
-  help
+  aiuto
   trivial
 
 configureHelpProviders DefaultHypHelp DefaultGoalHelp helpByContradictionGoal
 
 /--
-info: Help
-• Assume for contradiction hyp : ¬True
+info: Aiuto
+• Assumiamo per assurdo hyp : ¬True
 -/
 #guard_msgs in
 example : True := by
-  help
+  aiuto
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo x_1 tale che (hx_1 : f x_1 = y)
 -/
 #guard_msgs in
 example {X Y} (f : X → Y) (x : X) (y : Y) (h : ∃ x, f x = y) : True := by
-  help h
+  aiuto h
   trivial
 
 /--
-info: Help
+info: Aiuto
 • By h otteniamo x_1 tale che (x_1_dans : x_1 ∈ s) e (hx_1 : f x_1 = y)
 -/
 #guard_msgs in
 example {X Y} (f : X → Y) (s : Set X) (x : X) (y : Y) (h : ∃ x ∈ s, f x = y) : True := by
-  help h
+  aiuto h
   trivial
