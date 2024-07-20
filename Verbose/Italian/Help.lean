@@ -382,32 +382,32 @@ implement_endpoint (lang := en) helpIneqGoalSuggestion (l r : Format) (rel : Str
   pushCom "  Noi combiniamo [hyp₁, hyp₂]"
 
 implement_endpoint (lang := en) helpMemInterGoalSuggestion (elem le : Expr) : SuggestionM Unit := do
-  pushCom "The goal is prove {← elem.fmt} belongs to the intersection of {← le.fmt} with another set."
-  pushCom "Hance a direct proof comincia per:"
+  pushCom "L'obiettivo è dimostrare che {← elem.fmt} appartenga all'intersezione di {← le.fmt} con un altro insieme."
+  pushCom "Quindi una dimostrazione diretta comincia per:"
   pushTac `(tactic|Dimostriamo prima che $(← elem.stx) ∈ $(← le.stx))
 
 implement_endpoint (lang := en) helpMemUnionGoalSuggestion (elem le re : Expr) : SuggestionM Unit := do
-  pushCom "The goal is to prove {← elem.fmt} belongs to the union of {← le.fmt} e {← re.fmt}."
+  pushCom "L'obiettivo è dimostrare che {← elem.fmt} appartenga all'unione di {← le.fmt} e {← re.fmt}."
   descrDirectProof
   pushTac `(tactic|Dimostriamo che $(← elem.stx) ∈ $(← le.stx))
   flush
-  pushCom "or by:"
+  pushCom "o per:"
   pushTac `(tactic|Dimostriamo che $(← elem.stx) ∈ $(← re.stx))
 
 implement_endpoint (lang := en) helpNoIdeaGoalSuggestion : SuggestionM Unit := do
-  pushCom "No idea."
+  pushCom "Non ho idea."
 
 implement_endpoint (lang := en) helpSubsetGoalSuggestion (l r : Format) (xN : Name) (lT : Term) :
     SuggestionM Unit := do
-  pushCom "The goal is the inclusion {l} ⊆ {r}"
+  pushCom "L'obiettivo è l'inclusione {l} ⊆ {r}"
   descrDirectProof
   pushTac `(tactic| Sia $xN.ident:ident ∈ $lT)
   pushComment <| libre xN.ident
 
 implement_endpoint (lang := en) helpFalseGoalSuggestion : SuggestionM Unit := do
-  pushCom "The goal is to prove a contradiction."
-  pushCom "One can apply an assumption which is a negation"
-  pushCom "namely, by definition, with shape P → false."
+  pushCom "L'obiettivo è dimostrare una contraddizione."
+  pushCom "Si può applicare un'ipotesi che è una negazione"
+  pushCom "ovvero, per definizione, della forma P → false."
 
 implement_endpoint (lang := en) helpContraposeGoalSuggestion : SuggestionM Unit := do
   pushCom "L'obiettivo è un'implicazione."
